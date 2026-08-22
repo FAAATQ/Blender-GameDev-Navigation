@@ -1,6 +1,8 @@
 {
   "locale": "zh_HANT",
-  "aliases": [],
+  "aliases": [
+    "zh_TW"
+  ],
   "language": "繁體中文",
   "messages": {
     "GameDev Navigation": "GameDev 導覽",
@@ -21,6 +23,9 @@
     "Overlay Height": "浮層高度",
     "Navigation Trigger": "導覽觸發鍵",
     "Blender event type used to start and stop navigation": "用於開始和結束導覽的 Blender 事件類型",
+    "Native keymap editor unavailable": "原生按鍵編輯器不可用",
+    "Keymap is initializing": "按鍵映射正在初始化",
+    "Apply Navigation Binding": "套用導覽按鍵綁定",
     "Enable 3D Cursor Shortcut": "啟用 3D 游標快捷鍵",
     "Register Shift + Cursor Trigger for Blender users who need 3D Cursor placement; disabled by default to avoid conflicting with navigation boost": "為需要放置 3D 游標的 Blender 使用者註冊 Shift + 游標觸發鍵；預設關閉以避免與導覽加速衝突",
     "Cursor Trigger": "游標觸發鍵",
@@ -32,7 +37,7 @@
     "Cursor placement uses Shift + Cursor Trigger": "使用 Shift + 游標觸發鍵放置 3D 游標",
     "Keymap Status: Active": "按鍵狀態：已啟用",
     "Keymap Status: Inactive": "按鍵狀態：未啟用",
-    "GameDev View Navigation": "Unity 視圖導覽",
+    "GameDev View Navigation": "GameDev 視圖導覽",
     "Rebuild GameDev Navigation Keymap": "重建 GameDev 導覽按鍵",
     "Re-register key bindings from the current add-on preferences": "依照目前的附加元件偏好重新註冊按鍵",
     "GameDev Navigation keymap rebuilt": "GameDev 導覽按鍵已重建"
