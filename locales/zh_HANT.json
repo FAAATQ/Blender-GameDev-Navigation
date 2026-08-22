@@ -37,7 +37,7 @@
     "Cursor placement uses Shift + Cursor Trigger": "使用 Shift + 游標觸發鍵放置 3D 游標",
     "Keymap Status: Active": "按鍵狀態：已啟用",
     "Keymap Status: Inactive": "按鍵狀態：未啟用",
-    "GameDev View Navigation": "GameDev 視圖導覽",
+    "GameDev View Navigation": "GameDevNavigation",
     "Rebuild GameDev Navigation Keymap": "重建 GameDev 導覽按鍵",
     "Re-register key bindings from the current add-on preferences": "依照目前的附加元件偏好重新註冊按鍵",
     "GameDev Navigation keymap rebuilt": "GameDev 導覽按鍵已重建"
