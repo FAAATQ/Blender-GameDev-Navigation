@@ -274,7 +274,7 @@ def get_preferences(context=None):
 
 class VIEW3D_OT_unity_nav(Operator):
     bl_idname = 'view3d.unity_nav'
-    bl_label = 'GameDev View Navigation'
+    bl_label = 'GameDevNavigation'
     bl_options = {'REGISTER', 'BLOCKING'}
 
     def _settings(self, context):
