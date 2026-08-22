@@ -1,6 +1,6 @@
 # Blender-GameDev-Navigation
 
-![](./images/image_mt02k15g_9c37.png)
+![GameDev Navigation in Blender](https://raw.githubusercontent.com/FAAATQ/Blender-GameDev-Navigation/main/images/image_mt02k15g_9c37.png)
 
 [English](README.md) · **简体中文** · [繁體中文](README.TC.md)
 
