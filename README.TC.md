@@ -16,6 +16,8 @@
 - 可在附加元件偏好中設定。
 - 支援英文、簡體中文和繁體中文介面。
 
+本附加元件會在 Blender 的按鍵映射中新增一個 `GameDevNavigation` 選項，它同時作為鏡頭旋轉導覽和 `W/A/S/D` 導覽的觸發入口，預設為滑鼠右鍵。你可以將它設定為與目前使用的鏡頭旋轉鍵相同的按鍵組合。
+
 ## 安裝
 
 1. 從 GitHub Releases 下載 `Blender-GameDev-Navigation.zip`。

@@ -16,6 +16,8 @@
 - 可在插件偏好中配置。
 - 支持英文、简体中文和繁体中文界面。
 
+本插件会在 Blender 的键位映射中新增一个 `GameDevNavigation` 选项，它同时作为镜头旋转导航和 `W/A/S/D` 导航的触发入口，默认为鼠标右键。你可以将它设置为与你当前使用的镜头旋转键相同的按键组合。
+
 ## 安装
 
 1. 从 GitHub Releases 下载 `Blender-GameDev-Navigation.zip`。
