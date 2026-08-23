@@ -16,6 +16,8 @@ The project was formerly published as `Blender-Unity-Controls`; the current add-
 - Configure behavior through Add-on Preferences.
 - English, Simplified Chinese, and Traditional Chinese UI.
 
+The add-on adds a `GameDevNavigation` entry to Blender's keymap. It serves as the trigger for both look navigation and `W/A/S/D` movement, and defaults to the right mouse button. You can change it to the same key combination you currently use to rotate the view.
+
 ## Installation
 
 1. Download `Blender-GameDev-Navigation.zip` from GitHub Releases.
