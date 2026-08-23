@@ -5,6 +5,7 @@ bl_info = {
     'blender': (4, 0, 0),
     'location': 'Edit > Preferences > Add-ons > GameDev Navigation',
     'description': 'Unity- and Unreal-style RMB viewport navigation for Blender',
+    'doc_url': 'https://github.com/FAAATQ/Blender-GameDev-Navigation',
     'category': '3D View',
 }
 
@@ -27,8 +28,6 @@ REGISTERED_KEYMAP_ITEMS = []
 DRAW_HANDLES = set()
 
 DEFAULT_NAV_TRIGGER = 'RIGHTMOUSE'
-DEFAULT_CURSOR_TRIGGER = 'RIGHTMOUSE'
-DEFAULT_CURSOR_MOD_SHIFT = True
 ADDON_ID = __package__ or __name__
 TRANSLATION_ID = f'{ADDON_ID}.translations'
 
@@ -201,18 +200,6 @@ class UnityNavPreferences(AddonPreferences):
         default=DEFAULT_NAV_TRIGGER,
         update=update_keymap_preferences,
     )
-    enable_cursor_shortcut: BoolProperty(
-        name='Enable 3D Cursor Shortcut',
-        description='Register Shift + Cursor Trigger for Blender users who need 3D Cursor placement; disabled by default to avoid conflicting with navigation boost',
-        default=False,
-        update=update_keymap_preferences,
-    )
-    cursor_trigger: StringProperty(
-        name='Cursor Trigger',
-        description='Blender event type used with Shift to place the 3D Cursor',
-        default=DEFAULT_CURSOR_TRIGGER,
-        update=update_keymap_preferences,
-    )
 
     def draw(self, _context):
         layout = self.layout
@@ -242,25 +229,11 @@ class UnityNavPreferences(AddonPreferences):
         bindings = layout.box()
         bindings.label(text='Bindings')
         bindings.enabled = self.enabled
-        km, kmi, kc = find_navigation_keymap_item(_context)
-        if km and kmi and kc:
-            try:
-                from bl_ui import rna_keymap_ui
-                rna_keymap_ui.draw_kmi([], kc, km, kmi, bindings, 0)
-                bindings.operator('unity_nav.apply_binding', icon='FILE_REFRESH')
-            except (ImportError, RuntimeError, TypeError, AttributeError):
-                bindings.label(text='Native keymap editor unavailable')
-        else:
-            bindings.label(text='Keymap is initializing')
-        bindings.prop(self, 'enable_cursor_shortcut')
-        cursor = bindings.column()
-        cursor.enabled = self.enable_cursor_shortcut
-        cursor.prop(self, 'cursor_trigger')
-        cursor.label(text='Cursor placement uses Shift + Cursor Trigger')
+        bindings.label(text=bpy.app.translations.pgettext_iface('Configure GameDevNavigation in Blender Preferences > Keymap'))
 
         status = 'Active' if self.enabled and REGISTERED_KEYMAP_ITEMS else 'Inactive'
         layout.label(text=f'Keymap Status: {status}')
-        layout.operator('unity_nav.rebuild_keymap', icon='FILE_REFRESH')
+        layout.operator('gamedev_navigation.rebuild_keymap', icon='FILE_REFRESH')
 
 
 def get_preferences(context=None):
@@ -273,7 +246,7 @@ def get_preferences(context=None):
 
 
 class VIEW3D_OT_unity_nav(Operator):
-    bl_idname = 'view3d.unity_nav'
+    bl_idname = 'view3d.gamedev_navigation'
     bl_label = 'GameDevNavigation'
     bl_options = {'REGISTER', 'BLOCKING'}
 
@@ -543,34 +516,14 @@ class VIEW3D_OT_unity_nav(Operator):
         return {'RUNNING_MODAL'}
 
 
-class UNITYNAV_OT_rebuild_keymap(Operator):
-    bl_idname = 'unity_nav.rebuild_keymap'
+class GAMEDEVNAV_OT_rebuild_keymap(Operator):
+    bl_idname = 'gamedev_navigation.rebuild_keymap'
     bl_label = 'Rebuild GameDev Navigation Keymap'
     bl_description = 'Re-register key bindings from the current add-on preferences'
 
     def execute(self, context):
         rebuild_keymaps(context)
         self.report({'INFO'}, 'GameDev Navigation keymap rebuilt')
-        return {'FINISHED'}
-
-
-class UNITYNAV_OT_apply_binding(Operator):
-    bl_idname = 'unity_nav.apply_binding'
-    bl_label = 'Apply Navigation Binding'
-    bl_description = 'Apply the 3D View navigation binding to all add-on keymaps'
-
-    def execute(self, context):
-        km, kmi, _kc = find_navigation_keymap_item(context)
-        if not kmi:
-            self.report({'WARNING'}, 'Navigation keymap is not ready')
-            return {'CANCELLED'}
-
-        binding = keymap_binding(kmi)
-        for target_km in find_navigation_keymaps(context):
-            for target_kmi in target_km.keymap_items:
-                if target_kmi.idname == 'view3d.unity_nav':
-                    apply_keymap_binding(target_kmi, binding)
-        self.report({'INFO'}, 'Navigation binding applied')
         return {'FINISHED'}
 
 
@@ -652,55 +605,6 @@ def get_or_create_keymap(kc, name, space_type='EMPTY', region_type='WINDOW'):
     )
 
 
-def find_navigation_keymap_item(context=None):
-    kc = get_target_keyconfig(context)
-    if not kc:
-        return None, None, None
-    km = find_keymap(kc, '3D View', 'VIEW_3D')
-    if not km:
-        return None, None, kc
-    for kmi in km.keymap_items:
-        if kmi.idname == 'view3d.unity_nav':
-            return km, kmi, kc
-    return km, None, kc
-
-
-def find_navigation_keymaps(context=None):
-    kc = get_target_keyconfig(context)
-    if not kc:
-        return []
-    targets = (
-        ('3D View', 'VIEW_3D'),
-        ('Object Mode', 'EMPTY'),
-        ('Mesh', 'EMPTY'),
-    )
-    return [
-        km for name, space_type in targets
-        if (km := find_keymap(kc, name, space_type)) is not None
-    ]
-
-
-def keymap_binding(kmi):
-    if not kmi:
-        return DEFAULT_NAV_TRIGGER, False, False, False, False
-    return (
-        kmi.type,
-        kmi.shift,
-        kmi.ctrl,
-        kmi.alt,
-        kmi.oskey,
-    )
-
-
-def apply_keymap_binding(kmi, binding):
-    key_type, shift, ctrl, alt, oskey = binding
-    kmi.type = key_type
-    kmi.value = 'PRESS'
-    kmi.shift = shift
-    kmi.ctrl = ctrl
-    kmi.alt = alt
-    kmi.oskey = oskey
-
 
 def clear_registered_keymap_items():
     while REGISTERED_KEYMAP_ITEMS:
@@ -726,40 +630,17 @@ def unregister_keymaps(context=None):
     for name, space_type in targets:
         km = find_keymap(kc, name, space_type)
         if km is not None:
-            remove_items_by_operator(km, ['view3d.unity_nav'])
+            remove_items_by_operator(km, ['view3d.gamedev_navigation', 'view3d.unity_nav'])
 
 
-def apply_common_view_bindings(km, settings, binding=None):
+def apply_common_view_bindings(km, settings):
     log(f'Apply bindings to keymap: {km.name}')
-    remove_items_by_operator(km, ['view3d.unity_nav'])
-
-    if settings.enable_cursor_shortcut:
-        safe_new(
-            km,
-            'view3d.cursor3d',
-            settings.cursor_trigger,
-            'CLICK',
-            shift=DEFAULT_CURSOR_MOD_SHIFT,
-        )
-    key_type, shift, ctrl, alt, oskey = binding or (
-        settings.nav_trigger, False, False, False, False
-    )
-    safe_new(
-        km,
-        'view3d.unity_nav',
-        key_type,
-        'PRESS',
-        shift=shift,
-        ctrl=ctrl,
-        alt=alt,
-        oskey=oskey,
-    )
+    remove_items_by_operator(km, ['view3d.gamedev_navigation', 'view3d.unity_nav'])
+    safe_new(km, 'view3d.gamedev_navigation', settings.nav_trigger, 'PRESS')
 
 
 def register_keymaps(context=None):
     context = context or bpy.context
-    previous = find_navigation_keymap_item(context)[1]
-    binding = keymap_binding(previous) if previous else None
     unregister_keymaps(context)
     settings = get_preferences(context)
 
@@ -784,7 +665,7 @@ def register_keymaps(context=None):
         if key in seen:
             continue
         seen.add(key)
-        apply_common_view_bindings(km, settings, binding)
+        apply_common_view_bindings(km, settings)
 
 
 def rebuild_keymaps(context=None):
@@ -799,8 +680,7 @@ def rebuild_keymaps(context=None):
 CLASSES = (
     UnityNavPreferences,
     VIEW3D_OT_unity_nav,
-    UNITYNAV_OT_rebuild_keymap,
-    UNITYNAV_OT_apply_binding,
+    GAMEDEVNAV_OT_rebuild_keymap,
 )
 
 

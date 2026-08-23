@@ -15,7 +15,6 @@ The project was formerly published as `Blender-Unity-Controls`; the current add-
 - Adjust the current speed with the mouse wheel while navigating.
 - Configure behavior through Add-on Preferences.
 - English, Simplified Chinese, and Traditional Chinese UI.
-- Optional Blender 3D Cursor shortcut, disabled by default.
 
 ## Installation
 

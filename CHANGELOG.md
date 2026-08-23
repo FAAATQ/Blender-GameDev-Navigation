@@ -9,10 +9,9 @@ All notable changes to this project are documented in this file.
 - Unity-style modal navigation for Blender's 3D Viewport.
 - Configurable mouse sensitivity, acceleration, damping, speed, boost, timer interval, and speed overlay.
 - Global Blender Add-on Preferences for persistent configuration.
-- Automatic keymap updates when the add-on, navigation trigger, or cursor compatibility settings change.
+- Automatic keymap updates when the add-on or navigation trigger changes.
 - English, Simplified Chinese, and Traditional Chinese interfaces.
 - Extensible JSON locale catalogs, a translation template, and locale validation tooling.
-- Optional `Shift + Cursor Trigger` support for Blender 3D Cursor placement, disabled by default.
 - Reproducible release ZIP build script.
 
 ### Changed
